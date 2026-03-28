@@ -2,12 +2,13 @@ package mbus
 import "fmt"
 import "time"
 import "github.com/tarm/serial"
+import "net"
 var S *serial.Port
 	var (
 	Omact = make(chan bool) //флаг активности взаимодействия с OM310
 	)
 type Dfom []uint16  //тип значений считываемых/записываемых по modbus протоколу
-func Cserial(portname string, baud int, stopb int) error {
+func Cserial(portname string, baud int, stopb byte) error {
     var er error
     c := new(serial.Config)
 	c.Name = portname //"/dev/ttyUSB0" //порт по умолчанию и его настройки
@@ -16,7 +17,7 @@ func Cserial(portname string, baud int, stopb int) error {
     //c.Parity = "N" //"N" -no parity
 	c.ReadTimeout = time.Millisecond * 1000 //
     S, er = serial.OpenPort(c)
-    if err != nil {
+    if er != nil {
         fmt.Printf ("%s - не найден, или занят, или нет прав у пользователя \n", c.Name)
     }
 	return er
@@ -88,7 +89,7 @@ func (p *Dfom) Gettcp(sadr, nw uint16, conn net.Conn, mad byte) (error) {
 		fmt.Println(err)
 		return err 
 	}
-	cs2 =crcsum (bm, m-2)
+	cs2 =Crcsum (bm, m-2)
 	cs1 = uint16(bm[m-1])
 	cs1 = (cs1<<8)^uint16(bm[m-2])
 	if (cs1^cs2)!=0 {
