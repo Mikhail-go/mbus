@@ -8,13 +8,13 @@ var S *serial.Port
 	Omact = make(chan bool) //флаг активности взаимодействия с OM310
 	)
 type Dfom []uint16  //тип значений считываемых/записываемых по modbus протоколу
-func Cserial(portname string, baud int, stopb byte) error {
+func Cserial(portname string, baud int, stopb serial.StopBits, prt serial.Parity) error {
     var er error
     c := new(serial.Config)
 	c.Name = portname //"/dev/ttyUSB0" //порт по умолчанию и его настройки
 	c.Baud = baud //9600 for rs232 ОМ310
 	c.StopBits = stopb //2 ! for rs232 ОМ310
-    //c.Parity = "N" //"N" -no parity
+    c.Parity = prt //'N' // -no parity
 	c.ReadTimeout = time.Millisecond * 1000 //
     S, er = serial.OpenPort(c)
     if er != nil {
@@ -227,7 +227,7 @@ func Puttcp(sadr, d uint16, conn net.Conn, mad byte) (error) {
 		fmt.Println(err)
 		return err 
 	}
-	cs2 =crcsum (bm, m-2)
+	cs2 =Crcsum (bm, m-2)
 	cs1 = uint16(bm[m-1])
 	cs1 = (cs1<<8)^uint16(bm[m-2])
 	if (cs1^cs2)!=0 {
