@@ -88,11 +88,11 @@ func (p *Dfom) Gettcp(sadr, nw uint16, conn net.Conn, mad byte) (error) {
 		fmt.Println(err)
 		return err 
 	}
-	//cs2 =crcsum (bm, m-2)
-	//cs1 = uint16(bm[m-1])
-	//cs1 = (cs1<<8)^uint16(bm[m-2])
-	//if (cs1^cs2)!=0 {
-	//err = fmt.Errorf ("Ошибка КС при приёме: %d %d",cs1,cs2)
+	cs2 =crcsum (bm, m-2)
+	cs1 = uint16(bm[m-1])
+	cs1 = (cs1<<8)^uint16(bm[m-2])
+	if (cs1^cs2)!=0 {
+	    err = fmt.Errorf ("Ошибка КС при приёме: %d %d",cs1,cs2)
 	return err	
 	}
 	nad := int(bm[2]) // длина блока полученных данных в байтах в режиме чтения
@@ -146,7 +146,7 @@ func (p *Dfom) Getrtua(sadr, nw uint16, mba byte) (error) {
 	}	 
 	return nil
 }
-func Putrtu(sadr, d uint16, mba) (error) {
+func Putrtu(sadr, d uint16, mba byte) (error) {
 	//var m, lm int	 //lm-длина принятого сообщения включая КС
 	var cs1 uint16
 	b := make ([]byte, 32)
