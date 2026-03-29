@@ -8,14 +8,23 @@ var S *serial.Port
 	Omact = make(chan bool) //флаг активности взаимодействия с OM310
 	)
 type Dfom []uint16  //тип значений считываемых/записываемых по modbus протоколу
-func Cserial(portname string, baud int, stopb serial.StopBits, prt serial.Parity) error {
+func Cserial(portname string, baud int, stopb byte, prt byte) error {
     var er error
     c := new(serial.Config)
+    //- настройки serial port
 	c.Name = portname //"/dev/ttyUSB0" //порт по умолчанию и его настройки
 	c.Baud = baud //9600 for rs232 ОМ310
-	c.StopBits = stopb //2 ! for rs232 ОМ310
-    c.Parity = prt //'N' // -no parity
-	c.ReadTimeout = time.Millisecond * 1000 //
+    if stopb == 2 {
+	c.StopBits = serial.Stop2 //2 стопа, в остальных случаях Stop1
+    }
+    if prt == 'O' {
+    c.Parity = serial.ParityOdd 
+    }
+    if prt == 'E' {
+    c.Parity = serial.ParityEven
+    }
+    //- в остальных случаях без бита чётности ( serial.ParityNone )
+	c.ReadTimeout = time.Millisecond * 1000 // тайм-аут 1 сек
     S, er = serial.OpenPort(c)
     if er != nil {
         fmt.Printf ("%s - не найден, или занят, или нет прав у пользователя \n", c.Name)
