@@ -32,7 +32,6 @@ func Cserial(portname string, baud int, stopb byte, prt byte) error {
 	return er
 }
 func (p *Dfom) Getrtu(sadr, nw uint16, mba byte) (error) {
-	var cs1, cs2 uint16
 	b := make ([]byte, 128)
 	b[0] = mba		//modbus адрес OM310
 	b[1] = 3		//режим чтения (hold registers)
