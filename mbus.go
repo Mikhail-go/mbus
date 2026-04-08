@@ -39,7 +39,7 @@ func (p *Dfom) Getrtu(sadr, nw uint16, mba byte) (error) {
 	b[3] = byte(sadr)	// младший байт начального адреса
 	b[4] = byte(nw>>8)	// старший байт числа слов
 	b[5] = byte(nw)		// младший байт числа слов
-    bm := b[6:] 	//сюда принимаем ответ
+    bm := b[8:] 	//сюда принимаем ответ
 	m, err := Getoms(b) //посылаем команду и получаем ответ
 	if m == 0 || err != nil {
             fmt.Println(err)  
@@ -100,7 +100,7 @@ func (p *Dfom) Getrtua(sadr, nw uint16, mba byte) (error) {
 	b[3] = byte(sadr)	// младший байт начального адреса
 	b[4] = byte(nw>>8)	// старший байт числа слов
 	b[5] = byte(nw)		// младший байт числа слов
-    bm := b[6:] 	//сюда принимаем ответ
+    bm := b[8:] 	//сюда принимаем ответ
 	m, err := Getoms(b) //посылаем команду и получаем ответ
 	if m == 0 || err != nil {
            	fmt.Println(err)  
